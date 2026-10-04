@@ -9,5 +9,7 @@
     "check": "node --check assets/domain.js && node --check assets/app.js",
     "build": "node scripts/build.mjs"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

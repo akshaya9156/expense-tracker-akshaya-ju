@@ -1,65 +1,758 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#145e4a">
-  <meta name="description" content="A little clarity for your everyday money. Track income, expenses and monthly budgets privately in your browser with Pocket.">
-  <title>Pocket — Expense Tracker</title>
-  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="assets/styles.css">
-  <script defer src="assets/domain.js"></script>
-  <script defer src="assets/app.js"></script>
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <div class="app-shell">
-    <aside class="sidebar" aria-label="Main navigation">
-      <a class="brand" href="#overview" aria-label="Pocket home"><img src="assets/favicon.svg" alt="" width="38" height="38"><span>pocket<span class="brand-dot">.</span></span></a>
-      <div class="workspace-label">YOUR MONEY, SIMPLIFIED</div>
-      <nav class="nav-list">
-        <button class="nav-item active" data-view="overview" aria-current="page"><span data-icon="overview"></span>Overview</button>
-        <button class="nav-item" data-view="transactions"><span data-icon="transactions"></span>Transactions</button>
-        <button class="nav-item" data-view="insights"><span data-icon="chart"></span>Monthly insights</button>
-        <button class="nav-item" data-view="connections"><span data-icon="connections"></span>Connections<span class="nav-new">NEW</span></button>
-      </nav>
-      <div class="sidebar-bottom">
-        <div class="privacy-card"><span data-icon="shield"></span><strong>A pocket of your own.</strong><p>Your ledger stays in this browser, on this device.</p></div>
-        <button class="nav-item" id="settings-open"><span data-icon="settings"></span>Settings & backup</button>
-        <div class="profile"><span class="avatar">P</span><div><strong>Personal space</strong><small>No account needed</small></div><span data-icon="lock"></span></div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#145e4a" />
+    <meta
+      name="description"
+      content="A little clarity for your everyday money. Track income, expenses and monthly budgets privately in your browser with Pocket."
+    />
+    <title>Pocket — Expense Tracker</title>
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="stylesheet" href="assets/styles.css" />
+    <script defer src="assets/domain.js"></script>
+    <script defer src="assets/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="#overview" aria-label="Pocket home"
+          ><img src="assets/favicon.svg" alt="" width="38" height="38" /><span
+            >pocket<span class="brand-dot">.</span></span
+          ></a
+        >
+        <div class="workspace-label">YOUR MONEY, SIMPLIFIED</div>
+        <nav class="nav-list">
+          <button
+            class="nav-item active"
+            data-view="overview"
+            aria-current="page"
+          >
+            <span data-icon="overview"></span>Overview
+          </button>
+          <button class="nav-item" data-view="transactions">
+            <span data-icon="transactions"></span>Transactions
+          </button>
+          <button class="nav-item" data-view="insights">
+            <span data-icon="chart"></span>Monthly insights
+          </button>
+          <button class="nav-item" data-view="connections">
+            <span data-icon="connections"></span>Connections<span
+              class="nav-new"
+              >NEW</span
+            >
+          </button>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="privacy-card">
+            <span data-icon="shield"></span
+            ><strong>A pocket of your own.</strong>
+            <p>Your ledger stays in this browser, on this device.</p>
+          </div>
+          <button class="nav-item" id="settings-open">
+            <span data-icon="settings"></span>Settings & backup
+          </button>
+          <div class="profile">
+            <span class="avatar">P</span>
+            <div>
+              <strong>Personal space</strong><small>No account needed</small>
+            </div>
+            <span data-icon="lock"></span>
+          </div>
+        </div>
+      </aside>
+      <div class="main-shell">
+        <header class="topbar">
+          <div class="breadcrumb">
+            My workspace <span>/</span>
+            <strong id="breadcrumb">Overview</strong>
+          </div>
+          <div class="topbar-right">
+            <span class="storage-status" id="storage-status"
+              ><span></span>Stored on this device</span
+            ><button
+              class="icon-button mobile-settings"
+              id="mobile-settings"
+              aria-label="Settings and backup"
+            >
+              <span data-icon="settings"></span></button
+            ><span class="avatar small">P</span>
+          </div>
+        </header>
+        <div
+          id="storage-warning"
+          class="notice warning"
+          role="alert"
+          hidden
+        ></div>
+        <div id="demo-banner" class="notice demo" hidden>
+          <span
+            ><strong>Sample mode.</strong> Explore freely. Your personal ledger
+            is kept separate.</span
+          ><button id="exit-demo" class="text-button">Exit sample mode</button>
+        </div>
+        <main id="main" tabindex="-1">
+          <div class="page-heading">
+            <div>
+              <div class="eyebrow" id="greeting">
+                A LITTLE CLARITY, EVERY DAY
+              </div>
+              <h1 id="page-title">Your money at a glance<span>.</span></h1>
+              <p id="page-subtitle">Small habits. A clearer picture.</p>
+            </div>
+            <button class="button primary" id="add-transaction">
+              <span data-icon="plus"></span>Add transaction
+            </button>
+          </div>
+          <section
+            id="summary"
+            class="summary-grid"
+            aria-label="All-time totals"
+          >
+            <article class="balance-card">
+              <div class="card-top">
+                <span>Current balance</span
+                ><span class="soft-icon" data-icon="wallet"></span>
+              </div>
+              <strong class="money-large" id="balance">₹0.00</strong>
+              <div class="balance-bottom">
+                <span>All-time income minus expenses</span
+                ><span class="balance-decoration" aria-hidden="true">◒</span>
+              </div>
+            </article>
+            <article class="stat-card">
+              <div class="card-top">
+                <span>Total income</span
+                ><span class="stat-icon income" data-icon="income"></span>
+              </div>
+              <strong class="money-large" id="income">₹0.00</strong>
+              <p>
+                <span class="dot income"></span
+                ><span id="income-count">0 income transactions</span
+                ><span class="stat-period">All time</span>
+              </p>
+            </article>
+            <article class="stat-card">
+              <div class="card-top">
+                <span>Total expenses</span
+                ><span class="stat-icon expense" data-icon="expense"></span>
+              </div>
+              <strong class="money-large" id="expense">₹0.00</strong>
+              <p>
+                <span class="dot expense"></span
+                ><span id="expense-count">0 expense transactions</span
+                ><span class="stat-period">All time</span>
+              </p>
+            </article>
+          </section>
+          <section
+            id="overview-tools"
+            class="quick-row"
+            aria-label="Quick entry"
+          >
+            <div>
+              <span class="quick-spark" data-icon="spark"></span
+              ><strong>Make it a quick one</strong
+              ><span class="muted">Start with a familiar expense.</span>
+            </div>
+            <div class="quick-buttons">
+              <button data-template="coffee">☕ Coffee</button
+              ><button data-template="groceries">◈ Groceries</button
+              ><button data-template="transport">⌁ Commute</button
+              ><button id="paste-open">
+                <span data-icon="clipboard"></span>Paste payment text
+              </button>
+            </div>
+          </section>
+          <div id="month-toolbar" class="section-toolbar">
+            <div>
+              <h2>This month, in focus</h2>
+              <p id="month-caption">Your monthly summary</p>
+            </div>
+            <div class="month-control">
+              <button
+                class="icon-button"
+                id="previous-month"
+                aria-label="Previous month"
+              >
+                <span data-icon="chevronLeft"></span></button
+              ><label class="sr-only" for="month-picker">Summary month</label
+              ><input
+                type="month"
+                id="month-picker"
+                min="1900-01"
+                max="2100-12"
+              /><button
+                class="icon-button"
+                id="next-month"
+                aria-label="Next month"
+              >
+                <span data-icon="chevronRight"></span>
+              </button>
+            </div>
+          </div>
+          <section
+            id="insight-panels"
+            class="insight-grid"
+            aria-label="Monthly summaries"
+          >
+            <article class="panel spending-panel">
+              <div class="panel-heading">
+                <h3>Where it went</h3>
+                <span class="subtle-label">Expenses by category</span>
+              </div>
+              <div class="spending-body">
+                <div
+                  class="donut"
+                  id="category-chart"
+                  role="img"
+                  aria-label="No expenses"
+                >
+                  <div>
+                    <span>MONTHLY SPEND</span
+                    ><strong id="month-spend">₹0.00</strong
+                    ><small id="month-expense-count">0 transactions</small>
+                  </div>
+                </div>
+                <div id="category-legend" class="category-legend"></div>
+              </div>
+              <div id="category-insight" class="panel-note">
+                <span data-icon="spark"></span
+                ><span>Add your first expense to see the bigger picture.</span>
+              </div>
+            </article>
+            <article class="panel budget-panel">
+              <div class="panel-heading">
+                <h3>A little room to breathe</h3>
+                <button id="budget-open" class="text-button">Set budget</button>
+              </div>
+              <div class="budget-value">
+                <strong id="budget-left">Your pace, your plan.</strong
+                ><span id="budget-subtitle"
+                  >Set a monthly spending budget.</span
+                >
+              </div>
+              <div
+                class="budget-track"
+                role="progressbar"
+                aria-label="Monthly budget used"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                id="budget-progress"
+              >
+                <div id="budget-fill"></div>
+              </div>
+              <div class="budget-labels">
+                <span id="budget-spent">₹0 spent</span
+                ><span id="budget-total">No budget yet</span>
+              </div>
+              <div class="month-mini-stats">
+                <div>
+                  <span>Month’s income</span
+                  ><strong id="month-income">₹0.00</strong>
+                </div>
+                <div>
+                  <span>Month’s balance</span
+                  ><strong id="month-balance">₹0.00</strong>
+                </div>
+              </div>
+              <p id="budget-message" class="budget-message">
+                A budget is a guide. Find what works for you.
+              </p>
+            </article>
+          </section>
+          <section id="trend-panel" class="panel trend-panel" hidden>
+            <div class="panel-heading">
+              <div>
+                <h2>The bigger picture</h2>
+                <p>Income and expenses over the last six months.</p>
+              </div>
+              <div class="chart-key">
+                <span><i class="income-key"></i>Income</span
+                ><span><i class="expense-key"></i>Expenses</span>
+              </div>
+            </div>
+            <div id="trend-chart" class="trend-chart" role="img"></div>
+            <details>
+              <summary>View monthly numbers</summary>
+              <div class="table-scroll">
+                <table class="trend-table">
+                  <caption class="sr-only">
+                    Six-month summary
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Month</th>
+                      <th scope="col">Income</th>
+                      <th scope="col">Expenses</th>
+                      <th scope="col">Balance</th>
+                    </tr>
+                  </thead>
+                  <tbody id="trend-table"></tbody>
+                </table>
+              </div>
+            </details>
+          </section>
+          <section id="transactions-panel" class="panel transactions-panel">
+            <div class="panel-heading">
+              <div class="heading-with-count">
+                <h2 id="transactions-title">Your transactions</h2>
+                <span class="count-pill" id="transaction-count">0</span>
+              </div>
+              <button class="text-button" id="export-csv">
+                <span data-icon="download"></span>Export CSV
+              </button>
+            </div>
+            <div class="transaction-filters">
+              <div class="segmented" role="group" aria-label="Transaction type">
+                <button
+                  class="selected"
+                  data-filter-type=""
+                  aria-pressed="true"
+                >
+                  All</button
+                ><button data-filter-type="income" aria-pressed="false">
+                  Income</button
+                ><button data-filter-type="expense" aria-pressed="false">
+                  Expenses
+                </button>
+              </div>
+              <div class="filter-fields">
+                <label class="search-field"
+                  ><span data-icon="search"></span
+                  ><span class="sr-only">Search transactions</span
+                  ><input
+                    type="search"
+                    id="search"
+                    placeholder="Search transactions…"
+                    maxlength="140" /></label
+                ><label class="sr-only" for="category-filter"
+                  >Filter category</label
+                ><select id="category-filter">
+                  <option value="">All categories</option></select
+                ><label class="sr-only" for="period-filter"
+                  >Transaction period</label
+                ><select id="period-filter">
+                  <option value="month">Selected month</option>
+                  <option value="all">All time</option></select
+                ><label class="sr-only" for="sort-filter"
+                  >Sort transactions</label
+                ><select id="sort-filter">
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                  <option value="highest">Highest amount</option>
+                </select>
+              </div>
+            </div>
+            <div id="filter-summary" class="filter-summary"></div>
+            <div class="table-scroll">
+              <table class="transactions-table">
+                <caption class="sr-only">
+                  Income and expense transactions
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Transaction</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Date</th>
+                    <th scope="col" class="amount-heading">Amount</th>
+                    <th scope="col"><span class="sr-only">Actions</span></th>
+                  </tr>
+                </thead>
+                <tbody id="transaction-list"></tbody>
+              </table>
+            </div>
+            <div id="empty-state" class="empty-state" hidden>
+              <span class="empty-icon" data-icon="wallet"></span>
+              <h3 id="empty-title">A fresh start for your money.</h3>
+              <p id="empty-description">
+                Your morning coffee, payday, and everything in between. Give
+                each one a home.
+              </p>
+              <div class="empty-actions">
+                <button class="button primary" id="empty-add">
+                  Add your first transaction</button
+                ><button class="button secondary" id="try-demo">
+                  Explore sample data</button
+                ><button class="button secondary" id="clear-filters" hidden>
+                  Clear filters
+                </button>
+              </div>
+            </div>
+            <div class="table-footer">
+              <span id="list-footer">Your ledger is ready when you are.</span
+              ><button class="text-button" id="show-more" hidden>
+                Show more
+              </button>
+            </div>
+          </section>
+          <section id="connections-panel" hidden>
+            <div class="connection-intro">
+              <span class="eyebrow">LESS TYPING. MORE LIVING.</span>
+              <h2>Let the little things add up.</h2>
+              <p>
+                Start with tools that save you a few taps today. Account
+                connections are on the roadmap.
+              </p>
+            </div>
+            <div class="connection-grid">
+              <article class="panel connection-card">
+                <span
+                  class="connection-logo paste-logo"
+                  data-icon="clipboard"
+                ></span
+                ><span class="status-chip available">Available now</span>
+                <h3>Paste & review</h3>
+                <p>
+                  Copy a payment message or receipt text. Pocket suggests the
+                  amount and category, and you check the details before saving.
+                </p>
+                <button class="button primary" id="connection-paste">
+                  Try paste & review</button
+                ><small
+                  >Processed on your device. Nothing is sent to a server.</small
+                >
+              </article>
+              <article class="panel connection-card">
+                <span class="connection-logo gmail-logo" aria-hidden="true"
+                  >M</span
+                ><span class="status-chip">Planned</span>
+                <h3>Gmail receipts</h3>
+                <p>
+                  A future connection could turn selected receipt emails into
+                  transaction drafts, with your permission and a review before
+                  import.
+                </p>
+                <button class="button secondary" data-roadmap="gmail">
+                  See how it would work</button
+                ><small
+                  >Preview only · no inbox access or active connection</small
+                >
+              </article>
+              <article class="panel connection-card">
+                <span class="connection-logo gpay-logo" aria-hidden="true"
+                  >G<span>Pay</span></span
+                ><span class="status-chip">Planned</span>
+                <h3>Google Pay / UPI</h3>
+                <p>
+                  A future statement import could help you review payments in
+                  one place. For now, paste payment text to create a draft.
+                </p>
+                <button class="button secondary" data-roadmap="gpay">
+                  See the import roadmap</button
+                ><small>Preview only · no payment account access</small>
+              </article>
+            </div>
+            <article class="panel connection-note">
+              <span data-icon="shield"></span>
+              <div>
+                <h3>You stay in control.</h3>
+                <p>
+                  Pocket does not ask for bank passwords, OTPs, or payment
+                  permissions. There is no automatic sync in this version.
+                  Backups and CSV exports are available in Settings.
+                </p>
+              </div>
+            </article>
+          </section>
+          <footer class="page-footer">
+            <span
+              ><img
+                src="assets/favicon.svg"
+                alt=""
+                width="18"
+                height="18"
+              />Made for everyday money.</span
+            ><span>Stored locally <span>·</span> Yours to keep</span>
+          </footer>
+        </main>
       </div>
-    </aside>
-    <div class="main-shell">
-      <header class="topbar"><div class="breadcrumb">My workspace <span>/</span> <strong id="breadcrumb">Overview</strong></div><div class="topbar-right"><span class="storage-status" id="storage-status"><span></span>Stored on this device</span><button class="icon-button mobile-settings" id="mobile-settings" aria-label="Settings and backup"><span data-icon="settings"></span></button><span class="avatar small">P</span></div></header>
-      <div id="storage-warning" class="notice warning" role="alert" hidden></div>
-      <div id="demo-banner" class="notice demo" hidden><span><strong>Sample mode.</strong> Explore freely. Your personal ledger is kept separate.</span><button id="exit-demo" class="text-button">Exit sample mode</button></div>
-      <main id="main" tabindex="-1">
-        <div class="page-heading"><div><div class="eyebrow" id="greeting">A LITTLE CLARITY, EVERY DAY</div><h1 id="page-title">Your money at a glance<span>.</span></h1><p id="page-subtitle">Small habits. A clearer picture.</p></div><button class="button primary" id="add-transaction"><span data-icon="plus"></span>Add transaction</button></div>
-        <section id="summary" class="summary-grid" aria-label="All-time totals">
-          <article class="balance-card"><div class="card-top"><span>Current balance</span><span class="soft-icon" data-icon="wallet"></span></div><strong class="money-large" id="balance">₹0.00</strong><div class="balance-bottom"><span>All-time income minus expenses</span><span class="balance-decoration" aria-hidden="true">◒</span></div></article>
-          <article class="stat-card"><div class="card-top"><span>Total income</span><span class="stat-icon income" data-icon="income"></span></div><strong class="money-large" id="income">₹0.00</strong><p><span class="dot income"></span><span id="income-count">0 income transactions</span><span class="stat-period">All time</span></p></article>
-          <article class="stat-card"><div class="card-top"><span>Total expenses</span><span class="stat-icon expense" data-icon="expense"></span></div><strong class="money-large" id="expense">₹0.00</strong><p><span class="dot expense"></span><span id="expense-count">0 expense transactions</span><span class="stat-period">All time</span></p></article>
-        </section>
-        <section id="overview-tools" class="quick-row" aria-label="Quick entry"><div><span class="quick-spark" data-icon="spark"></span><strong>Make it a quick one</strong><span class="muted">Start with a familiar expense.</span></div><div class="quick-buttons"><button data-template="coffee">☕ Coffee</button><button data-template="groceries">◈ Groceries</button><button data-template="transport">⌁ Commute</button><button id="paste-open"><span data-icon="clipboard"></span>Paste payment text</button></div></section>
-        <div id="month-toolbar" class="section-toolbar"><div><h2>This month, in focus</h2><p id="month-caption">Your monthly summary</p></div><div class="month-control"><button class="icon-button" id="previous-month" aria-label="Previous month"><span data-icon="chevronLeft"></span></button><label class="sr-only" for="month-picker">Summary month</label><input type="month" id="month-picker" min="1900-01" max="2100-12"><button class="icon-button" id="next-month" aria-label="Next month"><span data-icon="chevronRight"></span></button></div></div>
-        <section id="insight-panels" class="insight-grid" aria-label="Monthly summaries">
-          <article class="panel spending-panel"><div class="panel-heading"><h3>Where it went</h3><span class="subtle-label">Expenses by category</span></div><div class="spending-body"><div class="donut" id="category-chart" role="img" aria-label="No expenses"><div><span>MONTHLY SPEND</span><strong id="month-spend">₹0.00</strong><small id="month-expense-count">0 transactions</small></div></div><div id="category-legend" class="category-legend"></div></div><div id="category-insight" class="panel-note"><span data-icon="spark"></span><span>Add your first expense to see the bigger picture.</span></div></article>
-          <article class="panel budget-panel"><div class="panel-heading"><h3>A little room to breathe</h3><button id="budget-open" class="text-button">Set budget</button></div><div class="budget-value"><strong id="budget-left">Your pace, your plan.</strong><span id="budget-subtitle">Set a monthly spending budget.</span></div><div class="budget-track" role="progressbar" aria-label="Monthly budget used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="budget-progress"><div id="budget-fill"></div></div><div class="budget-labels"><span id="budget-spent">₹0 spent</span><span id="budget-total">No budget yet</span></div><div class="month-mini-stats"><div><span>Month’s income</span><strong id="month-income">₹0.00</strong></div><div><span>Month’s balance</span><strong id="month-balance">₹0.00</strong></div></div><p id="budget-message" class="budget-message">A budget is a guide. Find what works for you.</p></article>
-        </section>
-        <section id="trend-panel" class="panel trend-panel" hidden><div class="panel-heading"><div><h2>The bigger picture</h2><p>Income and expenses over the last six months.</p></div><div class="chart-key"><span><i class="income-key"></i>Income</span><span><i class="expense-key"></i>Expenses</span></div></div><div id="trend-chart" class="trend-chart" role="img"></div><details><summary>View monthly numbers</summary><div class="table-scroll"><table class="trend-table"><caption class="sr-only">Six-month summary</caption><thead><tr><th scope="col">Month</th><th scope="col">Income</th><th scope="col">Expenses</th><th scope="col">Balance</th></tr></thead><tbody id="trend-table"></tbody></table></div></details></section>
-        <section id="transactions-panel" class="panel transactions-panel"><div class="panel-heading"><div class="heading-with-count"><h2 id="transactions-title">Your transactions</h2><span class="count-pill" id="transaction-count">0</span></div><button class="text-button" id="export-csv"><span data-icon="download"></span>Export CSV</button></div><div class="transaction-filters"><div class="segmented" role="group" aria-label="Transaction type"><button class="selected" data-filter-type="" aria-pressed="true">All</button><button data-filter-type="income" aria-pressed="false">Income</button><button data-filter-type="expense" aria-pressed="false">Expenses</button></div><div class="filter-fields"><label class="search-field"><span data-icon="search"></span><span class="sr-only">Search transactions</span><input type="search" id="search" placeholder="Search transactions…" maxlength="140"></label><label class="sr-only" for="category-filter">Filter category</label><select id="category-filter"><option value="">All categories</option></select><label class="sr-only" for="period-filter">Transaction period</label><select id="period-filter"><option value="month">Selected month</option><option value="all">All time</option></select><label class="sr-only" for="sort-filter">Sort transactions</label><select id="sort-filter"><option value="newest">Newest first</option><option value="oldest">Oldest first</option><option value="highest">Highest amount</option></select></div></div><div id="filter-summary" class="filter-summary"></div><div class="table-scroll"><table class="transactions-table"><caption class="sr-only">Income and expense transactions</caption><thead><tr><th scope="col">Transaction</th><th scope="col">Category</th><th scope="col">Date</th><th scope="col" class="amount-heading">Amount</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead><tbody id="transaction-list"></tbody></table></div><div id="empty-state" class="empty-state" hidden><span class="empty-icon" data-icon="wallet"></span><h3 id="empty-title">A fresh start for your money.</h3><p id="empty-description">Your morning coffee, payday, and everything in between. Give each one a home.</p><div class="empty-actions"><button class="button primary" id="empty-add">Add your first transaction</button><button class="button secondary" id="try-demo">Explore sample data</button><button class="button secondary" id="clear-filters" hidden>Clear filters</button></div></div><div class="table-footer"><span id="list-footer">Your ledger is ready when you are.</span><button class="text-button" id="show-more" hidden>Show more</button></div></section>
-        <section id="connections-panel" hidden><div class="connection-intro"><span class="eyebrow">LESS TYPING. MORE LIVING.</span><h2>Let the little things add up.</h2><p>Start with tools that save you a few taps today. Account connections are on the roadmap.</p></div><div class="connection-grid"><article class="panel connection-card"><span class="connection-logo paste-logo" data-icon="clipboard"></span><span class="status-chip available">Available now</span><h3>Paste & review</h3><p>Copy a payment message or receipt text. Pocket suggests the amount and category, and you check the details before saving.</p><button class="button primary" id="connection-paste">Try paste & review</button><small>Processed on your device. Nothing is sent to a server.</small></article><article class="panel connection-card"><span class="connection-logo gmail-logo" aria-hidden="true">M</span><span class="status-chip">Planned</span><h3>Gmail receipts</h3><p>A future connection could turn selected receipt emails into transaction drafts, with your permission and a review before import.</p><button class="button secondary" data-roadmap="gmail">See how it would work</button><small>Preview only · no inbox access or active connection</small></article><article class="panel connection-card"><span class="connection-logo gpay-logo" aria-hidden="true">G<span>Pay</span></span><span class="status-chip">Planned</span><h3>Google Pay / UPI</h3><p>A future statement import could help you review payments in one place. For now, paste payment text to create a draft.</p><button class="button secondary" data-roadmap="gpay">See the import roadmap</button><small>Preview only · no payment account access</small></article></div><article class="panel connection-note"><span data-icon="shield"></span><div><h3>You stay in control.</h3><p>Pocket does not ask for bank passwords, OTPs, or payment permissions. There is no automatic sync in this version. Backups and CSV exports are available in Settings.</p></div></article></section>
-        <footer class="page-footer"><span><img src="assets/favicon.svg" alt="" width="18" height="18">Made for everyday money.</span><span>Stored locally <span>·</span> Yours to keep</span></footer>
-      </main>
     </div>
-  </div>
-  <dialog id="transaction-dialog" aria-labelledby="transaction-dialog-title"><form id="transaction-form" novalidate><div class="dialog-heading"><div><span class="eyebrow">ONE SMALL HABIT</span><h2 id="transaction-dialog-title">Add a transaction</h2></div><button type="button" class="icon-button" data-close="transaction-dialog" aria-label="Close transaction form"><span data-icon="close"></span></button></div><p class="dialog-description" id="transaction-hint">A few details now. A clearer picture later.</p><fieldset class="type-choices"><legend class="sr-only">Transaction type</legend><label><input type="radio" name="type" value="expense" checked><span>− Expense</span></label><label><input type="radio" name="type" value="income"><span>+ Income</span></label></fieldset><label for="amount">Amount <span class="muted" id="amount-currency">INR</span></label><div class="amount-input"><span id="currency-symbol">₹</span><input id="amount" name="amount" type="text" inputmode="decimal" placeholder="0.00" autocomplete="off" aria-describedby="transaction-error" required></div><div class="form-grid"><div><label for="category">Category</label><select id="category" name="category" required></select></div><div><label for="date">Date</label><input id="date" name="date" type="date" min="1900-01-01" max="2100-12-31" required></div></div><label for="description">What was it for?</label><input id="description" name="description" maxlength="140" placeholder="e.g. Lunch with a friend" required><p class="field-hint">Keep it short and familiar. Up to 140 characters.</p><p class="form-error" id="transaction-error" role="alert" hidden></p><div class="dialog-footer"><button type="button" class="button secondary" data-close="transaction-dialog">Cancel</button><button type="submit" class="button primary" id="save-transaction">Save transaction</button></div></form></dialog>
-  <dialog id="paste-dialog" aria-labelledby="paste-title"><form id="paste-form"><div class="dialog-heading"><div><span class="eyebrow">A SHORTCUT TO YOUR LEDGER</span><h2 id="paste-title">Paste. Check. Save.</h2></div><button type="button" class="icon-button" data-close="paste-dialog" aria-label="Close paste assistant"><span data-icon="close"></span></button></div><p class="dialog-description">Paste a payment notification or receipt text. We’ll suggest a draft. Please leave out account numbers and other personal details.</p><label for="payment-text">Payment text</label><textarea id="payment-text" rows="5" maxlength="2000" placeholder="Paid INR 250 at a coffee shop on 2026-10-04" required></textarea><button type="button" class="text-button example-button" id="paste-example">Use an example</button><div class="inline-note"><span data-icon="lock"></span>Runs in your browser. Raw text is not kept unless you save it as the description.</div><div class="dialog-footer"><button type="button" class="button secondary" data-close="paste-dialog">Cancel</button><button class="button primary" type="submit">Review draft</button></div></form></dialog>
-  <dialog id="budget-dialog" aria-labelledby="budget-title"><form id="budget-form" novalidate><div class="dialog-heading"><h2 id="budget-title">Your monthly budget</h2><button class="icon-button" type="button" data-close="budget-dialog" aria-label="Close budget form"><span data-icon="close"></span></button></div><p class="dialog-description">Choose a spending guide that feels right. This amount applies to every month.</p><label for="budget-amount">Monthly amount</label><input id="budget-amount" type="text" inputmode="decimal" placeholder="e.g. 25000"><p class="field-hint">Leave blank or enter 0 to remove the budget.</p><p id="budget-error" class="form-error" role="alert" hidden></p><div class="dialog-footer"><button class="button secondary" type="button" data-close="budget-dialog">Cancel</button><button class="button primary" type="submit">Save budget</button></div></form></dialog>
-  <dialog id="settings-dialog" aria-labelledby="settings-title"><div class="dialog-heading"><h2 id="settings-title">Your space, your settings</h2><button class="icon-button" data-close="settings-dialog" aria-label="Close settings"><span data-icon="close"></span></button></div><div class="settings-section"><label for="currency">Display currency</label><select id="currency"><option value="INR">INR — Indian rupee (₹)</option><option value="USD">USD — US dollar ($)</option><option value="EUR">EUR — Euro (€)</option><option value="GBP">GBP — British pound (£)</option></select><p class="field-hint">Set this before adding transactions. Pocket uses one currency and does not convert amounts.</p></div><div class="settings-section"><h3>Keep a copy</h3><p>Local data stays in this browser. Clearing browser data removes it. Download a backup whenever you need one.</p><div class="settings-buttons"><button class="button secondary" id="backup-download"><span data-icon="download"></span>Download backup</button><button class="button secondary" id="backup-import"><span data-icon="upload"></span>Import backup</button></div><input id="backup-file" type="file" accept=".json,application/json" hidden><p class="field-hint">Import merges a Pocket JSON backup. Existing IDs are skipped; your settings stay unchanged unless the ledger is empty.</p><p id="settings-error" class="form-error" role="alert" hidden></p></div><div class="settings-section"><h3>A safe place to explore</h3><p>Try the features with sample transactions in a separate ledger.</p><button class="button secondary" id="settings-demo">Explore sample data</button></div></dialog>
-  <dialog id="confirm-dialog" aria-labelledby="confirm-title"><form method="dialog"><div class="dialog-heading"><h2 id="confirm-title">Delete this transaction?</h2></div><p id="confirm-description" class="dialog-description"></p><div class="dialog-footer"><button class="button secondary" value="cancel" autofocus>Keep transaction</button><button class="button danger" id="confirm-delete" value="delete">Delete transaction</button></div></form></dialog>
-  <dialog id="roadmap-dialog" aria-labelledby="roadmap-title"><div class="dialog-heading"><h2 id="roadmap-title">Connection roadmap</h2><button class="icon-button" data-close="roadmap-dialog" aria-label="Close roadmap"><span data-icon="close"></span></button></div><div id="roadmap-content"></div><div class="dialog-footer"><button class="button primary" data-close="roadmap-dialog">Got it</button></div></dialog>
-  <div id="toast" class="toast" role="status" aria-live="polite" hidden><span id="toast-message"></span><button id="undo-delete" hidden>Undo</button><button class="toast-dismiss" id="dismiss-toast" aria-label="Dismiss notification">×</button></div>
-  <noscript><div class="noscript">Pocket needs JavaScript to manage your ledger. Enable JavaScript and refresh this page.</div></noscript>
-</body>
+    <dialog id="transaction-dialog" aria-labelledby="transaction-dialog-title">
+      <form id="transaction-form" novalidate>
+        <div class="dialog-heading">
+          <div>
+            <span class="eyebrow">ONE SMALL HABIT</span>
+            <h2 id="transaction-dialog-title">Add a transaction</h2>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            data-close="transaction-dialog"
+            aria-label="Close transaction form"
+          >
+            <span data-icon="close"></span>
+          </button>
+        </div>
+        <p class="dialog-description" id="transaction-hint">
+          A few details now. A clearer picture later.
+        </p>
+        <fieldset class="type-choices">
+          <legend class="sr-only">Transaction type</legend>
+          <label
+            ><input type="radio" name="type" value="expense" checked /><span
+              >− Expense</span
+            ></label
+          ><label
+            ><input type="radio" name="type" value="income" /><span
+              >+ Income</span
+            ></label
+          >
+        </fieldset>
+        <label for="amount"
+          >Amount <span class="muted" id="amount-currency">INR</span></label
+        >
+        <div class="amount-input">
+          <span id="currency-symbol">₹</span
+          ><input
+            id="amount"
+            name="amount"
+            type="text"
+            inputmode="decimal"
+            placeholder="0.00"
+            autocomplete="off"
+            aria-describedby="transaction-error"
+            required
+          />
+        </div>
+        <div class="form-grid">
+          <div>
+            <label for="category">Category</label
+            ><select id="category" name="category" required></select>
+          </div>
+          <div>
+            <label for="date">Date</label
+            ><input
+              id="date"
+              name="date"
+              type="date"
+              min="1900-01-01"
+              max="2100-12-31"
+              required
+            />
+          </div>
+        </div>
+        <label for="description">What was it for?</label
+        ><input
+          id="description"
+          name="description"
+          maxlength="140"
+          placeholder="e.g. Lunch with a friend"
+          required
+        />
+        <p class="field-hint">
+          Keep it short and familiar. Up to 140 characters.
+        </p>
+        <p class="form-error" id="transaction-error" role="alert" hidden></p>
+        <div class="dialog-footer">
+          <button
+            type="button"
+            class="button secondary"
+            data-close="transaction-dialog"
+          >
+            Cancel</button
+          ><button type="submit" class="button primary" id="save-transaction">
+            Save transaction
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="paste-dialog" aria-labelledby="paste-title">
+      <form id="paste-form">
+        <div class="dialog-heading">
+          <div>
+            <span class="eyebrow">A SHORTCUT TO YOUR LEDGER</span>
+            <h2 id="paste-title">Paste. Check. Save.</h2>
+          </div>
+          <button
+            type="button"
+            class="icon-button"
+            data-close="paste-dialog"
+            aria-label="Close paste assistant"
+          >
+            <span data-icon="close"></span>
+          </button>
+        </div>
+        <p class="dialog-description">
+          Paste a payment notification or receipt text. We’ll suggest a draft.
+          Please leave out account numbers and other personal details.
+        </p>
+        <label for="payment-text">Payment text</label
+        ><textarea
+          id="payment-text"
+          rows="5"
+          maxlength="2000"
+          placeholder="Paid INR 250 at a coffee shop on 2026-10-04"
+          required
+        ></textarea
+        ><button
+          type="button"
+          class="text-button example-button"
+          id="paste-example"
+        >
+          Use an example
+        </button>
+        <div class="inline-note">
+          <span data-icon="lock"></span>Runs in your browser. Raw text is not
+          kept unless you save it as the description.
+        </div>
+        <div class="dialog-footer">
+          <button
+            type="button"
+            class="button secondary"
+            data-close="paste-dialog"
+          >
+            Cancel</button
+          ><button class="button primary" type="submit">Review draft</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="budget-dialog" aria-labelledby="budget-title">
+      <form id="budget-form" novalidate>
+        <div class="dialog-heading">
+          <h2 id="budget-title">Your monthly budget</h2>
+          <button
+            class="icon-button"
+            type="button"
+            data-close="budget-dialog"
+            aria-label="Close budget form"
+          >
+            <span data-icon="close"></span>
+          </button>
+        </div>
+        <p class="dialog-description">
+          Choose a spending guide that feels right. This amount applies to every
+          month.
+        </p>
+        <label for="budget-amount">Monthly amount</label
+        ><input
+          id="budget-amount"
+          type="text"
+          inputmode="decimal"
+          placeholder="e.g. 25000"
+        />
+        <p class="field-hint">Leave blank or enter 0 to remove the budget.</p>
+        <p id="budget-error" class="form-error" role="alert" hidden></p>
+        <div class="dialog-footer">
+          <button
+            class="button secondary"
+            type="button"
+            data-close="budget-dialog"
+          >
+            Cancel</button
+          ><button class="button primary" type="submit">Save budget</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="settings-dialog" aria-labelledby="settings-title">
+      <div class="dialog-heading">
+        <h2 id="settings-title">Your space, your settings</h2>
+        <button
+          class="icon-button"
+          data-close="settings-dialog"
+          aria-label="Close settings"
+        >
+          <span data-icon="close"></span>
+        </button>
+      </div>
+      <div class="settings-section">
+        <label for="currency">Display currency</label
+        ><select id="currency">
+          <option value="INR">INR — Indian rupee (₹)</option>
+          <option value="USD">USD — US dollar ($)</option>
+          <option value="EUR">EUR — Euro (€)</option>
+          <option value="GBP">GBP — British pound (£)</option>
+        </select>
+        <p class="field-hint">
+          Set this before adding transactions. Pocket uses one currency and does
+          not convert amounts.
+        </p>
+      </div>
+      <div class="settings-section">
+        <h3>Keep a copy</h3>
+        <p>
+          Local data stays in this browser. Clearing browser data removes it.
+          Download a backup whenever you need one.
+        </p>
+        <div class="settings-buttons">
+          <button class="button secondary" id="backup-download">
+            <span data-icon="download"></span>Download backup</button
+          ><button class="button secondary" id="backup-import">
+            <span data-icon="upload"></span>Import backup
+          </button>
+        </div>
+        <input
+          id="backup-file"
+          type="file"
+          accept=".json,application/json"
+          hidden
+        />
+        <p class="field-hint">
+          Import merges a Pocket JSON backup. Existing IDs are skipped; your
+          settings stay unchanged unless the ledger is empty.
+        </p>
+        <p id="settings-error" class="form-error" role="alert" hidden></p>
+      </div>
+      <div class="settings-section">
+        <h3>A safe place to explore</h3>
+        <p>Try the features with sample transactions in a separate ledger.</p>
+        <button class="button secondary" id="settings-demo">
+          Explore sample data
+        </button>
+      </div>
+    </dialog>
+    <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+      <form method="dialog">
+        <div class="dialog-heading">
+          <h2 id="confirm-title">Delete this transaction?</h2>
+        </div>
+        <p id="confirm-description" class="dialog-description"></p>
+        <div class="dialog-footer">
+          <button class="button secondary" value="cancel" autofocus>
+            Keep transaction</button
+          ><button class="button danger" id="confirm-delete" value="delete">
+            Delete transaction
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="roadmap-dialog" aria-labelledby="roadmap-title">
+      <div class="dialog-heading">
+        <h2 id="roadmap-title">Connection roadmap</h2>
+        <button
+          class="icon-button"
+          data-close="roadmap-dialog"
+          aria-label="Close roadmap"
+        >
+          <span data-icon="close"></span>
+        </button>
+      </div>
+      <div id="roadmap-content"></div>
+      <div class="dialog-footer">
+        <button class="button primary" data-close="roadmap-dialog">
+          Got it
+        </button>
+      </div>
+    </dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+      <span id="toast-message"></span
+      ><button id="undo-delete" hidden>Undo</button
+      ><button
+        class="toast-dismiss"
+        id="dismiss-toast"
+        aria-label="Dismiss notification"
+      >
+        ×
+      </button>
+    </div>
+    <noscript
+      ><div class="noscript">
+        Pocket needs JavaScript to manage your ledger. Enable JavaScript and
+        refresh this page.
+      </div></noscript
+    >
+  </body>
 </html>
