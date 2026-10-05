@@ -1,5 +1,10 @@
 # Changelog
 
+## Repository cleanup — 2026-10-05
+
+- Removed unused preview-hosting configuration and excluded it from future commits.
+- GitHub Pages remains the application's deployment target.
+
 ## Repository naming update — 2026-10-05
 
 - Renamed the GitHub repository to `expense-tracker-akshaya-ju` to include the candidate's name.
