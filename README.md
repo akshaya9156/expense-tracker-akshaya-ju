@@ -1,5 +1,11 @@
 # Pocket · Expense Tracker
 
+**Candidate:** Akshaya Ju
+
+**Repository:** [expense-tracker-akshaya-ju](https://github.com/akshaya9156/expense-tracker-akshaya-ju)
+
+**Live application:** [Open Pocket](https://akshaya9156.github.io/expense-tracker-akshaya-ju/)
+
 A responsive expense tracker built with **HTML, CSS, and vanilla JavaScript**. No framework, runtime dependencies, account, API key, or backend required.
 
 ## Run locally

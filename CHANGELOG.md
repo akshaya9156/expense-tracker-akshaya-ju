@@ -1,5 +1,11 @@
 # Changelog
 
+## Repository naming update — 2026-10-05
+
+- Renamed the GitHub repository to `expense-tracker-akshaya-ju` to include the candidate's name.
+- Updated package metadata, the local Git remote, and the repository homepage.
+- Added the candidate name and current repository/live-application links to the README.
+
 ## 1.0.0 — 2026-10-04
 
 - Established the Pocket dashboard, navigation, responsive layouts, and shared integer-money validation/reporting helpers.
